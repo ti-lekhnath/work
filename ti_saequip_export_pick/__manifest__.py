@@ -1,7 +1,10 @@
 {
     "name": "TI saequip export pick",
+    "author": "Target Integration",
+    "category": "Warehouse Management",
     "version": "18.0.1.0",
     "depends": ["stock"],
+    "website": "https://targetintegration.com/",
     "data": ["views/export_action_button.xml"],
     "license": "LGPL-3",
     "installable": True,
