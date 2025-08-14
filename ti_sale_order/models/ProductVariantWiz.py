@@ -22,7 +22,6 @@ class ProductVariantWiz(models.TransientModel):
         if not product:
             return res
 
-
         variants = self.env["product.product"].search(
             [("product_tmpl_id", "=", product.product_tmpl_id.id)]
         )
