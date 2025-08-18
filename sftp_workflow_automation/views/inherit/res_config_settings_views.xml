@@ -1,0 +1,21 @@
+<odoo>
+    <record id="res_config_settings_view_form_inherit_sftp" model="ir.ui.view">
+        <field name="name">res.config.settings.sftp.form.inherit</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base_setup.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//block[@name='integration']" position="inside">
+                <div class="app_settings_block" data-string="SFTP Settings">
+                    <h2>SFTP Configuration</h2>
+                    <group>
+                        <field name="sftp_hostname"/>
+                        <field name="sftp_port"/>
+                        <field name="sftp_username"/>
+                        <field name="sftp_password" password="True"/>
+                        <field name="sftp_remote_path"/>
+                    </group>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>
