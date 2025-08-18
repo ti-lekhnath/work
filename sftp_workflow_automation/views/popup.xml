@@ -1,0 +1,10 @@
+<odoo>
+    <record id="view_product_variant_wizard_form" model="ir.ui.view">
+      <field name="name">product.variant.wiz.form</field>
+      <field name="model">product.variant.wiz</field>
+      <field name="arch" type="xml">
+        <form string="Select Product Variants">
+        </form>
+      </field>
+    </record>
+  </odoo>

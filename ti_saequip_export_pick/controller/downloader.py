@@ -13,7 +13,6 @@ class Downloader(http.Controller):
             return request.not_found()
 
         try:
-
             with open(file_loc, "rb") as f:
                 return request.make_response(
                     f.read(),

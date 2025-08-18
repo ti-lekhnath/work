@@ -18,7 +18,6 @@ class StockPicking(models.Model):
             return "PICK"
         return self.picking_type_code or "Unknown"
 
-
     def action_export_to_csv(self):
         download_at = f"{Path(__file__).parent.parent}/downloads"
         os.makedirs(download_at, exist_ok=True)
