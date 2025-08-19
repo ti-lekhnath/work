@@ -6,11 +6,17 @@
             <field name="model">sale.order</field>
             <field name="inherit_id" ref="sale.view_order_form"/>
             <field name="arch" type="xml">
+                <xpath expr="//group[@name='order_details']//field[@name='date_order']" position="before">
+                    <group name="3pl_workflow">
+                        <field name="send_to_3pl" invisible="state not in ('sale')"/>
+                    </group>
+                </xpath>
+
                 <xpath expr="//header/button[@name='action_quotation_send']" position="before">
                     <button name="generate_csv_to_3pl"
                             string="Generate CSV for 3PL"
                             type="object"
-                            invisible="state not in ['sale']"/>
+                            invisible="send_to_3pl == False"/>
                 </xpath>
             </field>
         </record>
