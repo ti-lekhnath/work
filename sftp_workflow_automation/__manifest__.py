@@ -6,6 +6,8 @@
     "depends": ["sale"],
     "website": "https://targetintegration.com/",
     "data": [
+        "views/popup.xml",
+        "security/ir.model.access.csv",
         "views/inherit/sale_view_order_form.xml",
         "views/inherit/res_config_settings_views.xml",
     ],

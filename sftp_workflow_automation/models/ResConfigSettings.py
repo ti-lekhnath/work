@@ -5,6 +5,7 @@ from pathlib import Path
 
 MODULE_NAME = Path(__file__).parent.parent.name
 
+
 class ResConfigSettings(models.TransientModel):
     _inherit = "res.config.settings"
 

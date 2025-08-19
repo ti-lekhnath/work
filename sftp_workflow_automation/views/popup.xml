@@ -1,10 +1,34 @@
 <odoo>
-    <record id="view_product_variant_wizard_form" model="ir.ui.view">
-      <field name="name">product.variant.wiz.form</field>
-      <field name="model">product.variant.wiz</field>
-      <field name="arch" type="xml">
-        <form string="Select Product Variants">
-        </form>
-      </field>
+    <record id="action_sale_order_3pl_wizard" model="ir.actions.act_window">
+        <field name="name">Generate CSV for 3PL</field>
+        <field name="res_model">sale.order.3pl.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
     </record>
-  </odoo>
+
+
+    <record id="view_sale_order_3pl_wizard_form" model="ir.ui.view">
+        <field name="name">sale.order.3pl.wizard.form</field>
+        <field name="model">sale.order.3pl.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Generate 3PL CSV">
+                <sheet>
+                    <group>
+                        <field name="sale_order_id" invisible="1"/>
+                        <field name="sale_order_field_ids" widget="many2many_tags"/>
+                        <field name="sale_order_line_field_ids" widget="many2many_tags"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="action_generate_csv"
+                            string="Generate"
+                            type="object"
+                            class="btn-primary"/>
+                    <button string="Discard"
+                            class="btn-secondary"
+                            special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>
