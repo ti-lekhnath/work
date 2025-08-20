@@ -3,6 +3,7 @@ import csv
 import base64
 import paramiko
 from pathlib import Path
+from datetime import datetime
 from odoo import models, fields
 
 from ..constants import (
@@ -42,6 +43,12 @@ class SaleOrder3PLWizard(models.TransientModel):
         default=lambda self: self.get_sale_order_line_field_defaults(),
     )
 
+    @property
+    def base_path(self):
+        download_at = f"{Path(__file__).parent.parent}/downloads"
+        os.makedirs(download_at, exist_ok=True)
+        return download_at
+
     def get_sale_order_line_field_defaults(self):
         fields = ["product_id", "product_uom_qty", "price_unit", "price_total"]
         return self.env["ir.model.fields"].search(
@@ -54,7 +61,7 @@ class SaleOrder3PLWizard(models.TransientModel):
             [("model", "=", "sale.order"), ("name", "in", fields)]
         )
 
-    def file_upload(self):
+    def file_upload(self, filename):
         conf = self.env["ir.config_parameter"].sudo()
         host = conf.get_param(SFTP_HOST_KEY)
         port = int(conf.get_param(SFTP_PORT_KEY))
@@ -66,7 +73,7 @@ class SaleOrder3PLWizard(models.TransientModel):
         transport.connect(username=username, password=password)
         sftp = paramiko.SFTPClient.from_transport(transport)
 
-        sftp.put(f"{Path(__file__).parent}/test.csv", f"{remote_path}/test.csv")
+        sftp.put(f"{self.base_path}/{filename}", f"{remote_path}/{filename}")
 
     def action_generate_csv(self):
         self.ensure_one()
@@ -76,19 +83,20 @@ class SaleOrder3PLWizard(models.TransientModel):
             field.name for field in self.sale_order_line_field_ids
         ]
 
-        file_path = f"{Path(__file__).parent}/test.csv"
+        filename = f"{sale_order.name}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv"
+        file_path = f"{self.base_path}/{filename}"
         get_data = lambda record, fields: [
             getattr(record, field, "") for field in fields
         ]
+
         with open(file_path, mode="w", newline="") as buffer:
             writer = csv.writer(buffer)
             writer.writerow(sale_order_fields + sale_order_line_fields)
 
             for line in sale_order.order_line:
-                row = get_data(sale_order, sale_order_fields) + get_data(
-                    line, sale_order_line_fields
-                )
-                writer.writerow(row)
+                sale_order_data = get_data(sale_order, sale_order_fields)
+                sale_order_line_data = get_data(line, sale_order_line_fields)
+                writer.writerow(sale_order_data + sale_order_line_data)
 
         attachment = self.env["ir.attachment"].create(
             {
@@ -106,6 +114,6 @@ class SaleOrder3PLWizard(models.TransientModel):
             attachment_ids=[attachment.id],
         )
 
-        self.file_upload()
+        # self.file_upload(filename)
 
         return {"type": "ir.actions.act_window_close"}
