@@ -77,6 +77,19 @@ class SaleOrder3PLWizard(models.TransientModel):
             sftp.put(localfile, f"{remote_path}/{localfile.name}")
             localfile.unlink()
 
+    def get_field_value(self, record, field_name):
+        value = getattr(record, field_name, "")
+        if not value:
+            return ""
+
+        field = record._fields[field_name]
+        if field.type in ("many2one"):
+            return value.display_name if value else ""
+        elif field.type in ("one2many", "many2many"):
+            return ", ".join(r.display_name for r in value)
+
+        return value
+
     def action_generate_csv(self):
         self.ensure_one()
         sale_order = self.env["sale.order"].browse(self.sale_order_id.id)
@@ -88,7 +101,7 @@ class SaleOrder3PLWizard(models.TransientModel):
         filename = f"{sale_order.name}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv"
         file_path = f"{self.base_path}/{filename}"
         get_data = lambda record, fields: [
-            getattr(record, field, "") for field in fields
+            self.get_field_value(record, field) for field in fields
         ]
 
         with open(file_path, mode="w", newline="") as buffer:
