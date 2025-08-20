@@ -1,11 +1,16 @@
-# ti_saequip_export_pick
+# ti_saequip_export_sale_order_3pl
 
 ## Summary
-- Added a checkbox **Export To CSV?** on operation types to control CSV export availability.
-- Created a **server action** "Export To CSV" on transfers to generate a CSV file for selected records.
-- Implemented CSV download containing: Order, Type, Item, Quantity, and Lot/Serial Number.
-- Enabled bulk export of multiple transfers into a single CSV file.
-- Added HTTP route to serve the generated CSV for download.
+- Added a checkbox **Send to 3PL?** on Sale Orders to control CSV export availability.
+- Created a button **Generate CSV for 3PL** on Sale Orders to generate a CSV for selected records.
+- Implemented CSV download containing Sale Order and Sale Order Line fields as selected by the user.
+- Generated CSV is attached to the Sale Order chatter for reference.
+- Added SFTP integration to automatically upload CSV files to the configured remote path.
+- Configurable SFTP credentials and path from the Settings page.
+- Hourly scheduled action to scan and upload previously generated CSV files, deleting local copies after successful upload.
 
+## Demo
+Click [here](https://portal07.sharepoint.com/:v:/s/OdooDevs/EUVBMdCuFDxJly9yOVbxRJ8BOlq_8OeN03B0gofzIdd3wg?e=OhO03W8) to watch the demo.
 
-## click [here](https://portal07.sharepoint.com/:v:/s/OdooDevs/EQoaYuEhhDZAvwIT1Q42VmEBZB3H7s-qeadOHtd3CqecmQ?e=k2iiy8) to watch demo
+## Ticket
+You can track the task [here](https://mypmstudio.com/issues/71581).
