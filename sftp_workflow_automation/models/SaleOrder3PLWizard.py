@@ -14,7 +14,6 @@ from ..constants import (
 )
 
 
-
 class SaleOrder3PLWizard(models.TransientModel):
     _name = "sale.order.3pl.wizard"
     _description = "Wizard to select fields for 3PL CSV"
@@ -30,6 +29,7 @@ class SaleOrder3PLWizard(models.TransientModel):
         column2="field_id",
         string="Sale Order Fields",
         domain=[("model", "=", "sale.order")],
+        default=lambda self: self.get_sale_order_field_defaults(),
     )
 
     sale_order_line_field_ids = fields.Many2many(
@@ -39,7 +39,20 @@ class SaleOrder3PLWizard(models.TransientModel):
         column2="field_id",
         string="Sale Order Line Fields",
         domain=[("model", "=", "sale.order.line")],
+        default=lambda self: self.get_sale_order_line_field_defaults(),
     )
+
+    def get_sale_order_line_field_defaults(self):
+        fields = ["product_id", "product_uom_qty", "price_unit", "price_total"]
+        return self.env["ir.model.fields"].search(
+            [("model", "=", "sale.order.line"), ("name", "in", fields)]
+        )
+
+    def get_sale_order_field_defaults(self):
+        fields = ["client_order_ref", "display_name", "partner_id"]
+        return self.env["ir.model.fields"].search(
+            [("model", "=", "sale.order"), ("name", "in", fields)]
+        )
 
     def file_upload(self):
         conf = self.env["ir.config_parameter"].sudo()
@@ -54,7 +67,6 @@ class SaleOrder3PLWizard(models.TransientModel):
         sftp = paramiko.SFTPClient.from_transport(transport)
 
         sftp.put(f"{Path(__file__).parent}/test.csv", f"{remote_path}/test.csv")
-
 
     def action_generate_csv(self):
         self.ensure_one()
@@ -93,7 +105,6 @@ class SaleOrder3PLWizard(models.TransientModel):
             body="#PL CSV File",
             attachment_ids=[attachment.id],
         )
-
 
         self.file_upload()
 
