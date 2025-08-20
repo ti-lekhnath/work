@@ -11,6 +11,9 @@
         "views/inherit/sale_view_order_form.xml",
         "views/inherit/res_config_settings_views.xml",
     ],
+    'external_dependencies': {
+        'python': ['paramiko==4.0.0'],
+    },
     "license": "LGPL-3",
     "installable": True,
     "application": False,

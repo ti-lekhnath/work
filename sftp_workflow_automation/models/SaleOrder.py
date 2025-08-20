@@ -1,7 +1,7 @@
 from pathlib import Path
 from odoo import models, fields, api
 
-MODULE_NAME = Path(__file__).parent.parent.name
+MODULE_NAME = Path(__file__).parent.name
 
 
 class InheritSaleOrder(models.Model):
