@@ -61,7 +61,7 @@ class SaleOrder3PLWizard(models.TransientModel):
             [("model", "=", "sale.order"), ("name", "in", fields)]
         )
 
-    def file_upload(self, filename):
+    def file_upload(self):
         conf = self.env["ir.config_parameter"].sudo()
         host = conf.get_param(SFTP_HOST_KEY)
         port = int(conf.get_param(SFTP_PORT_KEY))
@@ -73,7 +73,9 @@ class SaleOrder3PLWizard(models.TransientModel):
         transport.connect(username=username, password=password)
         sftp = paramiko.SFTPClient.from_transport(transport)
 
-        sftp.put(f"{self.base_path}/{filename}", f"{remote_path}/{filename}")
+        for localfile in [_ for _ in Path(self.base_path).glob("*.csv") if _.is_file()]:
+            sftp.put(localfile, f"{remote_path}/{localfile.name}")
+            localfile.unlink()
 
     def action_generate_csv(self):
         self.ensure_one()
@@ -113,7 +115,5 @@ class SaleOrder3PLWizard(models.TransientModel):
             body="#PL CSV File",
             attachment_ids=[attachment.id],
         )
-
-        # self.file_upload(filename)
 
         return {"type": "ir.actions.act_window_close"}
