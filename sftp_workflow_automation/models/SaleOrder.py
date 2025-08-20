@@ -15,9 +15,6 @@ class InheritSaleOrder(models.Model):
             "name": "Something",
             "res_model": "sale.order.3pl.wizard",
             "view_mode": "form",
-            # "view_id": self.env.ref(
-            #     f"{MODULE_NAME}.view_product_variant_wizard_form"
-            # ).id,
             "target": "new",
             "context": {
                 "default_sale_order_id": self.id,
